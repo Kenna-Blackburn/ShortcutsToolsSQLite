@@ -11,13 +11,13 @@ import Testing
 
 @Test("Client")
 func client() async throws {
-    let sqliteURL: URL = URL
+    let sqliteURL = URL
         .desktopDirectory
         .appending(path: "SESCA/Tools-prod_1.sqlite")
 
-    let outputURL: URL = URL
-        .libraryDirectory
-        .appending(path: "Mobile Documents/com~apple~CloudDocs/Projects/SESCA/SESCA/Master.json")
+    let outputURL = URL
+        .desktopDirectory
+        .appending(path: "SESCA/Master.json")
 
     let master = try Master(sqliteURL: sqliteURL)
     try master.data().write(to: outputURL, options: [.atomic, .completeFileProtection])
