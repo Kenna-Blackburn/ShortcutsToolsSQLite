@@ -2,7 +2,7 @@
 # ShortcutsToolsSQLite
 
 > [!IMPORTANT]  
-> This package is undocumented. If you need help DM me (\@No\_Pen\_3825 on Discord; u\/No\_Pen\_3825 on Reddit).
+> This package is undocumented. If you need help, DM me (`@no_pen_3825` on Discord; `u/No_Pen_3825` on Reddit).
 
 ```swift
 // copy from resolved `~/Library/Shortcuts/ToolKit/Tools-active`
