@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SQLite3
 
 public struct Master: Codable, Hashable {
     public let actions: [Action]
@@ -18,16 +17,11 @@ public struct Master: Codable, Hashable {
 
 extension Master {
     public func data() throws -> Data {
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-        
-        return try encoder.encode(self)
+        return try JSONEncoder().encode(self)
     }
     
     public init(data: Data) throws {
-        let decoder = JSONDecoder()
-        
-        self = try decoder.decode(Self.self, from: data)
+        self = try JSONDecoder().decode(Self.self, from: data)
     }
 }
 
@@ -50,7 +44,6 @@ extension Master {
             process.standardError = pipe
             
             try process.run()
-            
             process.waitUntilExit()
             
             guard let data = try pipe.fileHandleForReading.readToEnd(),
@@ -63,17 +56,10 @@ extension Master {
         }
         
         let jsonDirectory = temporaryDirectory.appending(path: "RawJSON")
+        try FileManager.default.createDirectory(at: jsonDirectory, withIntermediateDirectories: true)
         
-        try FileManager
-            .default
-            .createDirectory(at: jsonDirectory, withIntermediateDirectories: true)
-        
-        let tableNames = RawSQLite.tableTypes.map({ $0.name })
-        
-        for tableName in tableNames {
-            let jsonURL = jsonDirectory
-                .appending(path: tableName + ".json")
-            
+        for tableName in RawSQLite.tableTypes.map({ $0.name }) {
+            let jsonURL = jsonDirectory.appending(path: tableName + ".json")
             try runCommand("sqlite3 '\(sqliteURL.path())' -json \"SELECT * FROM \(tableName);\" > '\(jsonURL.path())'")
         }
         
@@ -95,13 +81,8 @@ extension Master {
             }
         }
         
-        let tables = try RawSQLite
-            .tableTypes
-            .map({ try decode(type: $0) })
-        
-        // tail
-        let sqlite = RawSQLite(tables: tables)
-        try self.init(sqlite: sqlite)
+        let tables = try RawSQLite.tableTypes.map({ try decode(type: $0) })
+        try self.init(sqlite: .init(tables: tables))
     }
     
     private init(sqlite: RawSQLite) throws {

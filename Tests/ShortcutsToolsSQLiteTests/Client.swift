@@ -12,12 +12,12 @@ import Testing
 @Test("Client")
 func client() async throws {
     let sqliteURL = URL
-        .desktopDirectory
-        .appending(path: "SESCA/Tools-prod_1.sqlite")
+        .downloadsDirectory
+        .appending(path: "Tools-prod.v63-D091054F-9E52-45C9-AB80-E4495544BD39.sqlite")
 
     let outputURL = URL
-        .desktopDirectory
-        .appending(path: "SESCA/Master.json")
+        .downloadsDirectory
+        .appending(path: "Master.json")
 
     let master = try Master(sqliteURL: sqliteURL)
     try master.data().write(to: outputURL, options: [.atomic, .completeFileProtection])
