@@ -24,7 +24,5 @@ let outputURL = URL
     .desktopDirectory
     .appending(path: "master.json")
 
-let data = try JSONEncoder().encode(master)
-
-try data.write(to: outputURL)
+try master.data().write(to: outputURL)
 ```
