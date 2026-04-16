@@ -13,6 +13,16 @@ public struct Master: Codable, Hashable {
     public let valueTypes: [ValueType]
     
     public let containers: [Container]
+    
+    public init(
+        actions: [Action],
+        valueTypes: [ValueType],
+        containers: [Container],
+    ) {
+        self.actions = actions
+        self.valueTypes = valueTypes
+        self.containers = containers
+    }
 }
 
 extension Master {
