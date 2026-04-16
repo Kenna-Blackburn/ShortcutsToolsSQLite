@@ -36,6 +36,25 @@ extension Master {
 }
 
 extension Master {
+    public init(merging masters: Master...) {
+        func helper<T, K: Hashable>(_ keyPath: KeyPath<Master, [T]>, _ makeKey: (T) -> K) -> [T] {
+            Array(
+                masters
+                    .flatMap({ $0[keyPath: keyPath] })
+                    .reduce(into: [K: T](), { $0[makeKey($1)] = $1 })
+                    .values
+            )
+        }
+        
+        self.init(
+            actions: helper(\.actions, \.persistentID),
+            valueTypes: helper(\.valueTypes, \.persistentID),
+            containers: helper(\.containers, \.persistentID),
+        )
+    }
+}
+
+extension Master {
     #if os(macOS)
     public init(sqliteURL: URL) throws {
         let temporaryDirectory = URL
